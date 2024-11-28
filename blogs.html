@@ -105,55 +105,64 @@
             return firstText;
         }
 
-        function loadBlogs(page) {
-            const blogsContainer = document.getElementById('blogs-container');
-            const startIndex = (page - 1) * blogsPerPage;
-            const endIndex = Math.min(startIndex + blogsPerPage, allBlogs.length); // Ensure we do not exceed total blogs
+function loadBlogs(page) {
+    const blogsContainer = document.getElementById('blogs-container');
+    const startIndex = (page - 1) * blogsPerPage;
+    const endIndex = Math.min(startIndex + blogsPerPage, allBlogs.length); // Ensure we do not exceed total blogs
 
-            const blogsToDisplay = allBlogs.slice(startIndex, endIndex);
+    const blogsToDisplay = allBlogs.slice(startIndex, endIndex);
 
-            blogsToDisplay.forEach(blog => {
-                const blogCard = document.createElement('div');
-                blogCard.classList.add('bg-cyber-dark', 'border', 'border-gray-700', 'rounded-lg', 'overflow-hidden', 'shadow-md', 'transition-transform', 'transform', 'hover:scale-105');
+    blogsToDisplay.forEach(blog => {
+        const blogCard = document.createElement('div');
+        blogCard.classList.add('bg-cyber-dark', 'border', 'border-gray-700', 'rounded-lg', 'overflow-hidden', 'shadow-md', 'transition-transform', 'transform', 'hover:scale-105');
 
-                // Extract image from description if thumbnail is empty
-                let imageUrl = blog.thumbnail || '';
-                if (!imageUrl) {
-                    const parser = new DOMParser();
-                    const htmlDoc = parser.parseFromString(blog.description, 'text/html');
-                    const img = htmlDoc.querySelector('img');
-                    imageUrl = img ? img.src : 'https://via.placeholder.com/720x400?text=No+Image'; // Use placeholder if no image found
-                }
+        // Extract image from description if thumbnail is empty
+        let imageUrl = blog.thumbnail || '';
+        if (!imageUrl) {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(blog.description, 'text/html');
+            const img = htmlDoc.querySelector('img');
+            imageUrl = img ? img.src : 'https://via.placeholder.com/720x400?text=No+Image'; // Use placeholder if no image found
+        }
 
-                const firstText = extractFirstText(blog.description);
+        const firstText = extractFirstText(blog.description);
 
-                blogCard.innerHTML = `
-                    <img src="${imageUrl}" 
-                         alt="${blog.title}" 
-                         class="w-full h-48 object-cover">
-                    <div class="p-4">
-                        <h2 class="text-xl font-bold text-cyber-accent">${blog.title}</h2>
-                        <p class="text-gray-300 text-sm mt-2">
+        // Updated innerHTML to include author information and publishing date
+        blogCard.innerHTML = `
+            <img src="${imageUrl}" 
+                 alt="${blog.title}" 
+                 class="w-full h-48 object-cover">
+            <div class="p-4">
+                <h2 class="text-xl font-bold text-cyber-accent">${blog.title}</h2>
+                <p class="text-gray-300 text-sm mt-2">
                     ${firstText.length > 150 ? firstText.substring(0, 150) + '...' : firstText}
                 </p>
-                        <a href="${blog.link}" 
-                           target="_blank" 
-                           class="text-cyber-blue mt-4 inline-block font-semibold hover:underline">
-                            Read More →
-                        </a>
+                <div class="flex items-center mt-4">
+                    <img src="https://cdn-images-1.medium.com/fit/c/150/150/1*49iGhsRmzzhjv8OAOTQGgQ.jpeg" alt="Author Image" class="w-8 h-8 rounded-full mr-2">
+                    <div>
+                        <p class="text-gray-300 text-sm">${blog.author}</p>
+                        <p class="text-gray-500 text-xs">${new Date(blog.pubDate).toLocaleDateString()}</p>
                     </div>
-                `;
-                blogsContainer.appendChild(blogCard);
-            });
+                </div>
+                <a href="${blog.link}" 
+                   target="_blank" 
+                   class="text-cyber-blue mt-4 inline-block font-semibold hover:underline">
+                    Read More →
+                </a>
+            </div>
+        `;
+        blogsContainer.appendChild(blogCard);
+    });
 
-            // Show or hide the Load More button based on the number of remaining blogs
-            const loadMoreButton = document.getElementById('load-more');
-            if (endIndex < allBlogs.length) {
-                loadMoreButton.style.display = 'block'; // Show the button
-            } else {
-                loadMoreButton.style.display = 'none'; // Hide the button
-            }
-        }
+    // Show or hide the Load More button based on the number of remaining blogs
+    const loadMoreButton = document.getElementById('load-more');
+    if (endIndex < allBlogs.length) {
+        loadMoreButton.style.display = 'block'; // Show the button
+    } else {
+        loadMoreButton.style.display = 'none'; // Hide the button
+    }
+}
+
 
         document.getElementById('load-more').addEventListener('click', () => {
             currentPage++;
