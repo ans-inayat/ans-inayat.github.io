@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blogs - Ans Inayat</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'cyber-blue': '#0077be',
+                        'cyber-dark': '#001f3f',
+                        'cyber-accent': '#00ffff'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;700&display=swap');
+
+        body {
+            background: linear-gradient(135deg, #001f3f 0%, #000b1a 100%);
+            font-family: 'Roboto', sans-serif;
+        }
+    </style>
+</head>
+
+<body class="text-white min-h-screen flex flex-col">
+    <!-- Header -->
+    <div class="container mx-auto px-4 py-8 max-w-4xl">
+        <header class="mb-12 text-center">
+            <nav class="mb-12 flex justify-center space-x-6 text-cyber-accent">
+                <a href="index.html" class="hover:text-white transition-colors">Home</a>
+                <a href="projects.html" class="hover:text-white transition-colors">Projects</a>
+                <a href="about.html" class="hover:text-white transition-colors">About</a>
+                <a href="blogs.html" class="hover:text-white transition-colors">Blog</a>
+                <a href="contact.html" class="hover:text-white transition-colors">Contact</a>
+            </nav>
+        </header>
+    </div>
+
+    <!-- Main Content -->
+    <main class="flex-grow container mx-auto px-4 py-8">
+        <h1 class="text-4xl font-bold text-center text-cyber-accent mb-8">My Blogs</h1>
+        <div id="blogs-container" class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+            <!-- Blogs will be dynamically inserted here -->
+        </div>
+        <button id="load-more" class="bg-cyber-blue text-white rounded p-2 mt-4" style="display: none;">Load
+            More</button>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-cyber-dark text-center py-6 text-sm text-cyber-accent opacity-50">
+        <p>© 2024 Ans Inayat. All Rights Reserved.</p>
+        <p>Powered by Passion for Secure Technology 🚀</p>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        let currentPage = 1; // Current page index
+        const blogsPerPage = 17; // Number of blogs per page
+        let allBlogs = []; // Array to store all fetched blogs
+
+        async function fetchMediumBlogs() {
+            const rssUrl = "https://medium.com/feed/@ans-inayat";
+            const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`;
+
+            try {
+                const response = await fetch(apiUrl);
+                const data = await response.json();
+
+                if (data.status === "ok") {
+                    // Store all blogs for pagination
+                    allBlogs = data.items;
+
+                    // Load the first page of blogs
+                    loadBlogs(currentPage);
+                    console.log("All Blogs data", allBlogs)
+                } else {
+                    console.error("Failed to fetch feed:", data);
+                }
+            } catch (error) {
+                console.error("Failed to fetch blogs:", error);
+            }
+        }
+
+        function extractFirstText(description) {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(description, 'text/html');
+            const paragraphs = htmlDoc.querySelectorAll('p'); // Select all <p> elements
+            let firstText = '';
+
+            // Loop through paragraphs to find the first non-empty text node
+            for (const paragraph of paragraphs) {
+                const textContent = paragraph.textContent.trim();
+                if (textContent) {
+                    firstText = textContent; // Get the first non-empty text
+                    break; // Exit loop after finding the first text
+                }
+            }
+            return firstText;
+        }
+
+        function loadBlogs(page) {
+            const blogsContainer = document.getElementById('blogs-container');
+            const startIndex = (page - 1) * blogsPerPage;
+            const endIndex = Math.min(startIndex + blogsPerPage, allBlogs.length); // Ensure we do not exceed total blogs
+
+            const blogsToDisplay = allBlogs.slice(startIndex, endIndex);
+
+            blogsToDisplay.forEach(blog => {
+                const blogCard = document.createElement('div');
+                blogCard.classList.add('bg-cyber-dark', 'border', 'border-gray-700', 'rounded-lg', 'overflow-hidden', 'shadow-md', 'transition-transform', 'transform', 'hover:scale-105');
+
+                // Extract image from description if thumbnail is empty
+                let imageUrl = blog.thumbnail || '';
+                if (!imageUrl) {
+                    const parser = new DOMParser();
+                    const htmlDoc = parser.parseFromString(blog.description, 'text/html');
+                    const img = htmlDoc.querySelector('img');
+                    imageUrl = img ? img.src : 'https://via.placeholder.com/720x400?text=No+Image'; // Use placeholder if no image found
+                }
+
+                const firstText = extractFirstText(blog.description);
+
+                blogCard.innerHTML = `
+                    <img src="${imageUrl}" 
+                         alt="${blog.title}" 
+                         class="w-full h-48 object-cover">
+                    <div class="p-4">
+                        <h2 class="text-xl font-bold text-cyber-accent">${blog.title}</h2>
+                        <p class="text-gray-300 text-sm mt-2">
+                    ${firstText.length > 150 ? firstText.substring(0, 150) + '...' : firstText}
+                </p>
+                        <a href="${blog.link}" 
+                           target="_blank" 
+                           class="text-cyber-blue mt-4 inline-block font-semibold hover:underline">
+                            Read More →
+                        </a>
+                    </div>
+                `;
+                blogsContainer.appendChild(blogCard);
+            });
+
+            // Show or hide the Load More button based on the number of remaining blogs
+            const loadMoreButton = document.getElementById('load-more');
+            if (endIndex < allBlogs.length) {
+                loadMoreButton.style.display = 'block'; // Show the button
+            } else {
+                loadMoreButton.style.display = 'none'; // Hide the button
+            }
+        }
+
+        document.getElementById('load-more').addEventListener('click', () => {
+            currentPage++;
+            loadBlogs(currentPage);
+        });
+
+        fetchMediumBlogs();
+    </script>
+</body>
+
+</html>

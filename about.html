@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About - Ans Inayat</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'cyber-blue': '#0077be',
+                        'cyber-dark': '#001f3f',
+                        'cyber-accent': '#00ffff'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;700&display=swap');
+        body {
+            background: linear-gradient(135deg, #001f3f 0%, #000b1a 100%);
+            font-family: 'Roboto', sans-serif;
+        }
+    </style>
+</head>
+<body class="text-white min-h-screen flex flex-col">
+    <!-- Header -->
+    <div class="container mx-auto px-4 py-8 max-w-4xl">
+        <header class="mb-12 text-center">
+            <nav class="mb-12 flex justify-center space-x-6 text-cyber-accent">
+                <a href="index.html" class="hover:text-white transition-colors">Home</a>
+                <a href="projects.html" class="hover:text-white transition-colors">Projects</a>
+                <a href="about.html" class="hover:text-white transition-colors">About</a>
+                <a href="blogs.html" class="hover:text-white transition-colors">Blog</a>
+                <a href="contact.html" class="hover:text-white transition-colors">Contact</a>
+            </nav>
+        </header>
+        </div>
+
+    <!-- Main Content -->
+    <main class="flex-grow container mx-auto px-4 py-8">
+        <h1 class="text-4xl font-bold text-center text-cyber-accent mb-8">About Me</h1>
+        <div class="flex flex-col md:flex-row items-center md:items-start space-y-8 md:space-y-0 md:space-x-8">
+            <!-- Profile Picture -->
+            <div class="flex-shrink-0">
+                <img src="Media.jpeg" alt="Ans Inayat" class="rounded-full w-48 h-48 md:w-64 md:h-64 shadow-lg">
+            </div>
+            <!-- About Text -->
+            <div>
+                <p class="text-lg text-gray-300 mb-4 leading-relaxed">
+                    Hello! I'm <span class="text-cyber-accent font-bold">Ans Inayat</span>, a passionate tech enthusiast with a deep interest in 
+                    <span class="text-cyber-accent">Cybersecurity</span>, <span class="text-cyber-accent">Web Development</span>, and innovative technologies. 
+                </p>
+                <p class="text-lg text-gray-300 mb-4 leading-relaxed">
+                    With hands-on experience in vulnerability assessments, penetration testing, and developing robust web applications, I strive to create solutions that are both secure and efficient.
+                </p>
+                <p class="text-lg text-gray-300 leading-relaxed">
+                    Currently, I’m working on projects involving Docker, Laravel, React.js, and securing web applications by identifying and patching vulnerabilities such as SQL Injection and XSS. My goal is to continue building secure digital systems while exploring the frontiers of artificial intelligence and blockchain.
+                </p>
+            </div>
+        </div>
+
+        <!-- Skills Section -->
+        <div class="mt-12">
+            <h2 class="text-3xl font-bold text-cyber-accent mb-6">Skills & Expertise</h2>
+            <ul class="grid grid-cols-2 md:grid-cols-3 gap-4 text-gray-300">
+                <li>✅ Web Development (Laravel, React.js)</li>
+                <li>✅ Cybersecurity & Penetration Testing</li>
+                <li>✅ Vulnerability Analysis</li>
+                <li>✅ Docker & Containerization</li>
+                <li>✅ Database Management (MySQL)</li>
+                <li>✅ Mobile App Development (Android Studio, React Native)</li>
+            </ul>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-cyber-dark text-center py-6 text-sm text-cyber-accent opacity-50">
+        <p>© 2024 Ans Inayat. All Rights Reserved.</p>
+        <p>Crafted with 🔒 Cybersecurity Passion</p>
+    </footer>
+</body>
+</html>
